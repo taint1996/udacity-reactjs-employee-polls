@@ -1,3 +1,7 @@
+export interface Answer {
+  [questionId: string]: string;
+}
+
 export interface User {
   id: string;
   password: string;
@@ -10,3 +14,5 @@ export interface User {
 export interface Users {
   [key: string]: User;
 }
+
+

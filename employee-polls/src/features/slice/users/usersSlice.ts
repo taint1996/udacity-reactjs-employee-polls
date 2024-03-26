@@ -1,7 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { _getUsers } from "../../../utils/_DATA";
 import { User } from "../../models/User";
-import { AppDispatch, RootState } from "../../../app/store";
+import { AppDispatch, RootState } from "../../store";
 
 import { sortedUsers } from "../../../utils/usersUtil";
 
@@ -55,4 +55,4 @@ const usersSlice = createSlice({
 });
 
 export default usersSlice.reducer;
-export const selectUsers = (state: RootState) => state.usersReducer.users;
+export const selectUsers = (state: RootState) => state.users.users;

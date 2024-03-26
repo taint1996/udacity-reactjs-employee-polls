@@ -10,10 +10,6 @@ export interface Question {
   [key: string]: any;
 }
 
-export interface SaveQuestionResponse {
-  question: Question;
-}
-
 export interface Questions {
   [key: string]: Question;
 }

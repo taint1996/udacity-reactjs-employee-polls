@@ -1,51 +1,77 @@
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import { Box, Button, CardActions, Grid } from "@mui/material";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 
-export default function QuestionList() {
-  return (
-    <Card sx={{ py: 4 }}>
-      <CardHeader
-        title="New Questions"
-        sx={{ textAlign: "center" }}
-      ></CardHeader>
-      <CardContent>
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-          >
-            {Array.from(Array(6)).map((_, index) => (
-              <Grid item xs={2} sm={4} md={4} key={index}>
-                <Card>
-                  <CardContent
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <div>sarahedo</div>
-                    <p style={{ color: "#b4bdd4" }}>Timestamp</p>
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      color="success"
-                      fullWidth
-                    >
-                      Show
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      </CardContent>
-    </Card>
-  );
+import { useSelector } from "react-redux";
+import { RootState } from "../../features/store";
+import { Box, Typography } from "@mui/material";
+import {
+  getFilteredQuestionIds,
+  selectQuestions,
+} from "../../features/slice/questions/questionsSlice";
+import React from "react";
+import { Question } from "../../features/models/Question";
+import { useNavigate, useParams } from "react-router-dom";
+import QuestionItem from "./QuestionItem";
+
+interface QuestionListProps {
+  showAnswered: boolean;
 }
+
+const QuestionList: React.FC<QuestionListProps> = ({ showAnswered }) => {
+  const authedUser = useSelector((state: RootState) => state.auth.user);
+  const questions = useSelector(selectQuestions);
+
+  const filteredQuestionIds = getFilteredQuestionIds(
+    questions,
+    authedUser,
+    true
+  );
+
+  const renderTemplateNoAnswer = () => {
+    if (filteredQuestionIds.length === 0) {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "80vh",
+          }}
+        >
+          <Typography variant="h5" color="text.secondary">
+            {showAnswered
+              ? "No answered polls available"
+              : "No unanswered polls available"}
+          </Typography>
+        </Box>
+      );
+    }
+  };
+
+  const navigate = useNavigate();
+  const { questionId } = useParams();
+  const handleShowQuestion = () => {
+    navigate(`/questions/${questionId}`);
+  };
+
+  return (
+    <Box>
+      {renderTemplateNoAnswer()}
+      {filteredQuestionIds.map((id: string) => {
+        const question: Question = questions.find((q) => q.id === id);
+        const author = question.author;
+
+        return (
+          <QuestionItem
+            question={question}
+            author={author}
+            onHandleShowQuestion={handleShowQuestion}
+            key={id}
+          />
+        );
+      })}
+    </Box>
+  );
+};
+
+export default QuestionList;

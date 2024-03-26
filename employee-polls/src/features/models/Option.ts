@@ -1,4 +1,4 @@
 export interface Option {
-  votes?: string[];
+  votes: string[] | null;
   text: string;
 }

@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "../../features/slice/auth/authSlice";
+import authReducer from "../slice/auth/authSlice";
 import { useDispatch } from "react-redux";
-import questionsReducer from "../../features/slice/questions/questionSlice";
-import usersReducer from "../../features/slice/users/usersSlice"
+import questionsReducer from "../slice/questions/questionsSlice";
+import usersReducer from "../slice/users/usersSlice"
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer,
+    users: usersReducer,
     questions: questionsReducer,
-    usersReducer
+    auth: authReducer
   },
   devTools: process.env.NODE_ENV !== "production",
 });

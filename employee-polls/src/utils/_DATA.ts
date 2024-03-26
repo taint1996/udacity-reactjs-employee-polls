@@ -4,9 +4,9 @@ import { User } from "../features/models/User";
 let users: Record<string, User> = {
   sarahedo: {
     id: "sarahedo",
-    password: "password123",
+    password: "1234",
     name: "Sarah Edo",
-    avatarURL: null,
+    avatarURL: "/assets/images/snow.jpg",
     answers: {
       "8xf0y6ziyjabvozdd253nd": "optionOne",
       "6ni6ok3ym7mf1p33lnez": "optionOne",
@@ -17,36 +17,26 @@ let users: Record<string, User> = {
   },
   tylermcginnis: {
     id: "tylermcginnis",
-    password: "abc321",
+    password: "1234",
     name: "Tyler McGinnis",
-    avatarURL: null,
+    avatarURL: "/src/assets/images/tyler.jpg",
     answers: {
       vthrdm985a262al8qx3do: "optionOne",
       xj352vofupe1dqz9emx13r: "optionTwo",
     },
     questions: ["loxhs1bqm25b708cmbf3g", "vthrdm985a262al8qx3do"],
   },
-  mtsamis: {
-    id: "mtsamis",
-    password: "xyz123",
-    name: "Mike Tsamis",
-    avatarURL: null,
+  johndoe: {
+    id: "johndoe",
+    password: "1234",
+    name: "John Doe",
+    avatarURL: "/src/assets/images/leaf.jpg",
     answers: {
       xj352vofupe1dqz9emx13r: "optionOne",
       vthrdm985a262al8qx3do: "optionTwo",
       "6ni6ok3ym7mf1p33lnez": "optionOne",
     },
     questions: ["6ni6ok3ym7mf1p33lnez", "xj352vofupe1dqz9emx13r"],
-  },
-  zoshikanlu: {
-    id: "zoshikanlu",
-    password: "pass246",
-    name: "Zenobia Oshikanlu",
-    avatarURL: null,
-    answers: {
-      xj352vofupe1dqz9emx13r: "optionOne",
-    },
-    questions: [],
   },
 };
 
@@ -57,24 +47,24 @@ let questions: Record<string, Question> = {
     timestamp: 1467166872634,
     optionOne: {
       votes: ["sarahedo"],
-      text: "Build our new application with Javascript",
+      text: "have horrible short term memory",
     },
     optionTwo: {
       votes: [],
-      text: "Build our new application with Typescript",
+      text: "have horrible long term memory",
     },
   },
   "6ni6ok3ym7mf1p33lnez": {
     id: "6ni6ok3ym7mf1p33lnez",
-    author: "mtsamis",
+    author: "johndoe",
     timestamp: 1468479767190,
     optionOne: {
       votes: [],
-      text: "hire more frontend developers",
+      text: "become a superhero",
     },
     optionTwo: {
-      votes: ["mtsamis", "sarahedo"],
-      text: "hire more backend developers",
+      votes: ["johndoe", "sarahedo"],
+      text: "become a supervillian",
     },
   },
   am8ehyc8byjqgar0jgpub9: {
@@ -83,11 +73,11 @@ let questions: Record<string, Question> = {
     timestamp: 1488579767190,
     optionOne: {
       votes: [],
-      text: "conduct a release retrospective 1 week after a release",
+      text: "be telekinetic",
     },
     optionTwo: {
       votes: ["sarahedo"],
-      text: "conduct release retrospectives quarterly",
+      text: "be telepathic",
     },
   },
   loxhs1bqm25b708cmbf3g: {
@@ -96,11 +86,11 @@ let questions: Record<string, Question> = {
     timestamp: 1482579767190,
     optionOne: {
       votes: [],
-      text: "have code reviews conducted by peers",
+      text: "be a front-end developer",
     },
     optionTwo: {
       votes: ["sarahedo"],
-      text: "have code reviews conducted by managers",
+      text: "be a back-end developer",
     },
   },
   vthrdm985a262al8qx3do: {
@@ -109,29 +99,29 @@ let questions: Record<string, Question> = {
     timestamp: 1489579767190,
     optionOne: {
       votes: ["tylermcginnis"],
-      text: "take a course on ReactJS",
+      text: "find $50 yourself",
     },
     optionTwo: {
-      votes: ["mtsamis"],
-      text: "take a course on unit testing with Jest",
+      votes: ["johndoe"],
+      text: "have your best friend find $500",
     },
   },
   xj352vofupe1dqz9emx13r: {
     id: "xj352vofupe1dqz9emx13r",
-    author: "mtsamis",
+    author: "johndoe",
     timestamp: 1493579767190,
     optionOne: {
-      votes: ["mtsamis", "zoshikanlu"],
-      text: "deploy to production once every two weeks",
+      votes: ["johndoe"],
+      text: "write JavaScript",
     },
     optionTwo: {
       votes: ["tylermcginnis"],
-      text: "deploy to production once every month",
+      text: "write Swift",
     },
   },
 };
 
-export function generateUID(): string {
+function generateUID(): string {
   return (
     Math.random().toString(36).substring(2, 15) +
     Math.random().toString(36).substring(2, 15)
@@ -139,48 +129,52 @@ export function generateUID(): string {
 }
 
 export function _getUsers(): Promise<Record<string, User>> {
-  return new Promise((resolve) => {
-    setTimeout(() => resolve({ ...users }), 1000);
+  return new Promise((res) => {
+    setTimeout(() => res({ ...users }), 1000);
   });
 }
 
 export function _getQuestions(): Promise<Record<string, Question>> {
-  return new Promise((resolve) => {
-    setTimeout(() => resolve({ ...questions }), 1000);
+  return new Promise((res) => {
+    setTimeout(() => res({ ...questions }), 1000);
   });
 }
 
 function formatQuestion({
-  optionOne,
-  optionTwo,
+  optionOneText,
+  optionTwoText,
   author,
 }: {
-  optionOne: string;
-  optionTwo: string;
-  author: string;
+  optionOneText: string;
+  optionTwoText: string;
+  author: User;
 }) {
   return {
     id: generateUID(),
     timestamp: Date.now(),
-    author,
+    author: author.id,
     optionOne: {
       votes: [],
-      text: optionOne,
+      text: optionOneText,
     },
     optionTwo: {
       votes: [],
-      text: optionTwo,
+      text: optionTwoText,
     },
   };
 }
 
 export function _saveQuestion(question: {
-  optionOne: string;
-  optionTwo: string;
-  author: string;
+  optionOneText: string;
+  optionTwoText: string;
+  author: User;
 }) {
   return new Promise((res, rej) => {
-    if (!question?.optionOne || !question?.optionTwo || !question?.author) {
+    if (
+      !question?.optionOneText ||
+      !question?.optionTwoText ||
+      !question?.author
+    ) {
       rej("Please provide 2 answers of the question and its author");
     }
 
@@ -206,7 +200,7 @@ export function _saveQuestionAnswer({
   qid: string;
   answer: string;
 }) {
-  return new Promise<void>((res, rej) => {
+  return new Promise<void | boolean>((res, rej) => {
     if (!authedUser || !qid || !answer) {
       rej("Please provide the answer, user and question id");
     }
@@ -234,7 +228,7 @@ export function _saveQuestionAnswer({
         },
       };
 
-      res();
+      res(true);
     }, 500);
   });
 }

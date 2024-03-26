@@ -9,15 +9,14 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { _getUsers } from "../../../utils/_DATA.ts";
-import { useAppDispatch } from "../../../app/hook.ts";
+import { useAppDispatch } from "../../store/hook.ts";
 import Copyright from "../../../components/Copyright/index.tsx";
 import { useNavigate } from "react-router-dom";
 import ImgLogin from "../../../assets/icon-login.png";
-import { login } from "./authSlice.tsx";
-import { fetchQuestions } from "../questions/questionSlice.tsx";
+import { login } from "./authSlice.ts";
 import { User } from "../../models/User.ts";
+import { fetchQuestions } from "../questions/questionsSlice.ts";
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 interface IFormInput {
@@ -38,25 +37,26 @@ const Login = () => {
       password: "",
     },
   });
-  // The `state` arg is correctly typed as `RootState` already
+
   const dispatch = useAppDispatch();
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    const getUser = (await _getUsers()) as User;
+    const getUser = (await _getUsers()) as Record<string, User>;
 
-    const findUser: User = Object.values(getUser).find(
+    const findUser: User | undefined = Object.values(getUser).find(
       (gU) => gU.id === data.id && gU.password === data.password
     );
 
-    if (findUser) {
-      const userWithoutPassword = { ...findUser };
-      delete userWithoutPassword.password;
-
-      const action = await dispatch(login(userWithoutPassword));
-      console.log("action", action);
-      // If login is successful, fetch the questions data
+    if (findUser && findUser.id && findUser.password) {
+      const fUser: User = {
+        ...data,
+        name: findUser.name,
+        avatarURL: findUser.avatarURL,
+        answers: findUser.answers,
+        questions: findUser.questions,
+      };
+      dispatch(login(fUser));
       dispatch(fetchQuestions());
-      localStorage.setItem("user", JSON.stringify(userWithoutPassword));
       navigate("/");
     } else {
       setError("root.wrongUsr", {
@@ -101,7 +101,6 @@ const Login = () => {
               control={control}
               rules={{
                 required: "Field username can't be blank!",
-                // validate: validateLogin,
               }}
               render={({ field }) => (
                 <TextField

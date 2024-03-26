@@ -1,4 +1,7 @@
 import { User } from "../features/models/User";
+import ImgSnow from "../assets/snow.jpg";
+import ImgLeaf from "../assets/leaf.jpg";
+import ImgTyler from "../assets/tyler.jpg";
 
 export const sortedUsers = (users: User[]) => {
   return users.sort((userA, userB) => {
@@ -14,4 +17,15 @@ export const sortedUsers = (users: User[]) => {
       (Object.values(userA?.answers ?? {}).length ?? 0)
     );
   });
+};
+
+export const showImageUser = (avatarURL: string | null | undefined) => {
+  switch (avatarURL) {
+    case "../assets/leaf.jpg":
+      return ImgLeaf;
+    case "../assets/tyler.jpg":
+      return ImgTyler;
+    default:
+      return ImgSnow;
+  }
 };
