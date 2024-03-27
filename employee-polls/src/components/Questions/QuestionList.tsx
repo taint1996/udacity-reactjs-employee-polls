@@ -10,7 +10,7 @@ import {
 } from "../../features/slice/questions/questionsSlice";
 import React from "react";
 import { Question } from "../../features/models/Question";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import QuestionItem from "./QuestionItem";
 
 interface QuestionListProps {
@@ -24,40 +24,39 @@ const QuestionList: React.FC<QuestionListProps> = ({ showAnswered }) => {
   const filteredQuestionIds = getFilteredQuestionIds(
     questions,
     authedUser,
-    true
+    showAnswered
   );
 
+  console.log('filteredQuestionIds ', filteredQuestionIds)
+
   const renderTemplateNoAnswer = () => {
-    if (filteredQuestionIds.length === 0) {
-      return (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            minHeight: "80vh",
-          }}
-        >
-          <Typography variant="h5" color="text.secondary">
-            {showAnswered
-              ? "No answered polls available"
-              : "No unanswered polls available"}
-          </Typography>
-        </Box>
-      );
-    }
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "80vh",
+        }}
+      >
+        <Typography variant="h1" color="secondary" component="h3">
+          {showAnswered
+            ? "No answered polls available"
+            : "No unanswered polls available"}
+        </Typography>
+      </Box>
+    );
   };
 
   const navigate = useNavigate();
-  const { questionId } = useParams();
-  const handleShowQuestion = () => {
-    navigate(`/questions/${questionId}`);
+  const handleShowQuestion = (id) => {
+    navigate(`/questions/${id}`);
   };
 
   return (
     <Box>
-      {renderTemplateNoAnswer()}
-      {filteredQuestionIds.map((id: string) => {
+      {filteredQuestionIds.length === 0 && renderTemplateNoAnswer()}
+      {filteredQuestionIds && filteredQuestionIds.map((id: string) => {
         const question: Question = questions.find((q) => q.id === id);
         const author = question.author;
 
@@ -65,7 +64,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ showAnswered }) => {
           <QuestionItem
             question={question}
             author={author}
-            onHandleShowQuestion={handleShowQuestion}
+            onHandleShowQuestion={() => handleShowQuestion(id)}
             key={id}
           />
         );

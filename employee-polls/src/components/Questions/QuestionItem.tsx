@@ -9,9 +9,11 @@ import { formatQuestionTime } from "../../utils/datetimeUtil";
 export default function QuestionItem({
   question,
   author,
+  onHandleShowQuestion,
 }: {
   question: Question;
   author: string;
+  onHandleShowQuestion: React.MouseEventHandler<HTMLButtonElement> | undefined;
 }) {
   return (
     <Card sx={{ marginBottom: "16px" }}>
@@ -28,7 +30,13 @@ export default function QuestionItem({
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" variant="outlined" color="success" fullWidth>
+        <Button
+          size="small"
+          variant="outlined"
+          color="success"
+          fullWidth
+          onClick={onHandleShowQuestion}
+        >
           Show
         </Button>
       </CardActions>

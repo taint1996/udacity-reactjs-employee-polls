@@ -53,7 +53,7 @@ export const fetchQuestions = () => {
     try {
       const questionsRecord: Record<string, Question> = await _getQuestions();
       const questions: Question[] = Object.values(questionsRecord);
-      
+
       dispatch(setQuestions(questions));
     } catch (error) {
       console.error("Error fetching questions:", error);
@@ -72,15 +72,18 @@ export function getFilteredQuestionIds(
     questionDict[question.id] = question;
   });
 
-  const filteredQuestionIds: string[] = Object.keys(questionDict).filter((id) => {
-    const question: Question = questionDict[id];
-    const hasAnswered =
-      authedUser !== null &&
-      authedUser.id !== undefined && // Additional check
-      ((question.optionOne.votes ?? []).includes(authedUser.id) ||
-        (question.optionTwo.votes ?? []).includes(authedUser.id));
-    return showAnswered ? hasAnswered : !hasAnswered;
-  });
+  const filteredQuestionIds: string[] = Object.keys(questionDict).filter(
+    (id) => {
+      const question: Question = questionDict[id];
+      const hasAnswered =
+        authedUser !== null &&
+        authedUser.id !== undefined &&
+        ((question.optionOne.votes ?? []).includes(authedUser.id) ||
+          (question.optionTwo.votes ?? []).includes(authedUser.id));
+      console.log('yolo', hasAnswered, question);
+      return showAnswered ? hasAnswered : !hasAnswered;
+    }
+  );
 
   return filteredQuestionIds;
 }

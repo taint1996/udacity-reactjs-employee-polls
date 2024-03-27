@@ -5,16 +5,17 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, Container } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { fetchUsers, selectUsers } from "./usersSlice";
-import { AppDispatch, RootState } from "../../store";
+
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { AnyAction } from "redux";
-import Loading from "../../../components/Loading";
+import { AppDispatch, RootState } from "../../features/store";
+import { fetchUsers, selectUsers } from "../../features/slice/users/usersSlice";
+import Loading from "../Loading";
 
 export default function Leaderboard() {
   const defaultTheme = createTheme();
@@ -45,7 +46,11 @@ export default function Leaderboard() {
               <Loading />
             </Box>
           )}
-          {error && <p>Error: {error}</p>}
+          {error && (
+            <Typography variant="h5" component="p">
+              Error: {error}
+            </Typography>
+          )}
           {!loading && (
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">

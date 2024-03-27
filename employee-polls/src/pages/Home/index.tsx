@@ -37,7 +37,7 @@ const Home = () => {
   const renderTemplateLoggedIn = () => {
     return (
       <ThemeProvider theme={defaultTheme}>
-        <Container component="main" maxWidth="md">
+        <Container component="main" maxWidth="md" sx={{ marginTop: "2rem" }}>
           <Tabs value={selectedTab} onChange={handleTabChange}>
             <Tab label="Unanswered Questions" />
             <Tab label="Answered Questions" />

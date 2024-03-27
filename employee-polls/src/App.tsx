@@ -1,53 +1,32 @@
-import Header from "./components/Header/index.tsx";
-import { Routes, Route, useParams } from "react-router-dom";
-import Home from "./pages/Home/index.tsx";
-
+import React, { Suspense } from "react";
+import { Routes, Route } from "react-router-dom";
+import Loading from "./components/Loading";
+import Header from "./components/Header";
+import NotFound from "./components/NotFound";
 import { CreationPoll } from "./pages/CreationPoll/index.tsx";
-import Questions from "./pages/Home/index.tsx";
+import Leaderboard from "./components/LeaderBoard/index.tsx";
 
-import Login from "./features/slice/auth/Login.tsx";
-import Leaderboard from "./features/slice/users/Leaderboard.tsx";
-import NotFound from "./components/NotFound/index.tsx";
-import React from "react";
-import Loading from "./components/Loading/index.tsx";
-import QuestionItem from "./components/Questions/QuestionItem.tsx";
-import { selectQuestions } from "./features/slice/questions/questionsSlice.ts";
-import { useSelector } from "react-redux";
-import { Question } from "./features/models/Question.ts";
+const Home = React.lazy(() => import("./pages/Home"));
+const PollPage = React.lazy(() => import("./components/PollPage"));
+const Login = React.lazy(() => import("./features/slice/auth/Login.tsx"));
 
-function App() {
-  const { questionId } = useParams();
-
-  const questions = useSelector(selectQuestions);
-  const question: Question | undefined = questions.find(
-    (q) => q.id === questionId
-  );
-
+const App: React.FC = () => {
   return (
     <>
       <Header />
-
-      <React.Suspense fallback={<Loading />}>
+      <Suspense fallback={<Loading />}>
         <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/questions" element={<Questions />}></Route>
-          <Route
-            path="/questions/:questionId"
-            element={
-              question && (
-                <QuestionItem question={question} author={question?.author} />
-              )
-            }
-          ></Route>
-          <Route path="/leaderboard" element={<Leaderboard />}></Route>
-          <Route path="/add" element={<CreationPoll />}></Route>
+          <Route path="/" Component={() => <Home />} />
+          <Route path="/questions/:questionId" Component={() => <PollPage />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/add" element={<CreationPoll />} />
 
-          <Route path="/login" element={<Login />}></Route>
+          <Route path="/login" Component={() => <Login />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </React.Suspense>
+      </Suspense>
     </>
   );
-}
+};
 
 export default App;
